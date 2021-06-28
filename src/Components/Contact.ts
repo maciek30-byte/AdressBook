@@ -7,7 +7,7 @@ type propertyToChange = '_name'| '_surname'| '_email'
 class Contact implements ContactInterface {
   private _createdDate: Date;
   private _modificationDate: Date;
-  private _uuid: string;
+  private _id: string;
 
   constructor(
     private _name: string,
@@ -15,7 +15,7 @@ class Contact implements ContactInterface {
     private _email: string
   ) {
     Validator.isWrongEmail(_email);
-    this._uuid = uuidv4();
+    this._id = uuidv4();
     this._createdDate = new Date();
     this._modificationDate = new Date();
   }
@@ -35,8 +35,8 @@ class Contact implements ContactInterface {
   getModificationDate(): Date {
     return this._modificationDate;
   }
-  getUuid(): string {
-    return this._uuid;
+  getId(): string {
+    return this._id;
   }
 
   setProperty(propertyToChange: propertyToChange, newValue: string): void {

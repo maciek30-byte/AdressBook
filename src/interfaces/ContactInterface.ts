@@ -4,7 +4,7 @@ export interface ContactInterface {
   getEmail(): string     //validation email//
   getCreatedDate(): Date;
   getModificationDate(): Date;
-  getUuid(): string;
+  getId(): string;
 
   updateModificationDate(): void;
   setProperty(valueToChange:string, newValue:string): void;
