@@ -42,3 +42,5 @@ class ContactGroup implements ContactGroupInterface {
     return result;
   }
 }
+
+export default ContactGroup

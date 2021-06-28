@@ -1,8 +1,9 @@
 import { ContactInterface } from "../interfaces/ContactInterface";
 import { v4 as uuidv4 } from "uuid";
 import Validator from "./Validator";
+import {propertyToChange} from "../Types/AllTypes";
 //@ToDo test setter function//
-type propertyToChange = '_name'| '_surname'| '_email'
+
 
 class Contact implements ContactInterface {
   private _createdDate: Date;

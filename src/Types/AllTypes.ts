@@ -1,0 +1,1 @@
+ export type propertyToChange = '_name'| '_surname'| '_email';
