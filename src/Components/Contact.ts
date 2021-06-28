@@ -1,5 +1,8 @@
 import { ContactInterface } from "../interfaces/ContactInterface";
 import { v4 as uuidv4 } from "uuid";
+import Validator from "./Validator";
+//@ToDo test setter function//
+type propertyToChange = '_name'| '_surname'| '_email'
 
 class Contact implements ContactInterface {
   private _createdDate: Date;
@@ -11,6 +14,7 @@ class Contact implements ContactInterface {
     private _surname: string,
     private _email: string
   ) {
+    Validator.isWrongEmail(_email);
     this._uuid = uuidv4();
     this._createdDate = new Date();
     this._modificationDate = new Date();
@@ -35,8 +39,11 @@ class Contact implements ContactInterface {
     return this._uuid;
   }
 
-  setProperty(propertyToChange: string, newValue: string): void {
-    propertyToChange = newValue;
+  setProperty(propertyToChange: propertyToChange, newValue: string): void {
+    if (propertyToChange === "_email") {
+      Validator.isWrongEmail(newValue);
+    }
+    this[propertyToChange] = newValue;
   }
 
   updateModificationDate(): void {
