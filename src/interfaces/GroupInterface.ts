@@ -8,7 +8,7 @@ interface ContactGroupInterface {
   setGroupName(newGroupName: string): void;
   addContactToGroup(newContact: Contact): void; // zwaliduje ???
   deleteContact(contactToDelete: Contact): void;
-  checkThatExist(contactToCheck: Contact): boolean;
+  // checkThatExist(contactToCheck: Contact): boolean;
 }
 
 export default ContactGroupInterface;

@@ -19,18 +19,10 @@ class ContactGroup implements ContactGroupInterface {
     Validator.isEmptyStringValue(newGroupName)
     this.groupName = newGroupName;
   }
-  checkThatExist(contactToCheck: Contact): boolean {
-    const checked = this.contactGroupList.some(
-      (contact) => contact.getId() === contactToCheck.getId()
-    );
-    checked
-      ? console.log("contact is exist")
-      : console.log("contact is not exist on this group");
-    return checked;
-  }
+
 
   addContactToGroup(newContact: Contact): void {
-    if (this.checkThatExist(newContact)) {
+    if (Validator.checkThatExist(newContact,this.contactGroupList)) {
       throw new Error("you duplicate contact");
     }
     this.contactGroupList.push(newContact);
