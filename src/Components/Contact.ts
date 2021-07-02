@@ -1,55 +1,46 @@
-import { ContactInterface } from "../interfaces/ContactInterface";
+import { IContact } from "../interfaces/ContactInterface";
 import { v4 as uuidv4 } from "uuid";
 import Validator from "./Validator";
-import {propertyToChange} from "../Types/AllTypes";
-//@ToDo test setter function//
+import { propertyToChange } from "../Types/AllTypes";
 
-
-class Contact implements ContactInterface {
+class Contact implements IContact {
+  private _id: string;
+  name: string;
+  surname: string;
+  email: string;
   private _createdDate: Date;
   private _modificationDate: Date;
-  private _id: string;
 
-  constructor(
-    private _name: string,
-    private _surname: string,
-    private _email: string
-  ) {
-    Validator.isWrongEmail(_email);
+  constructor(name: string, surname: string, email: string) {
+    Validator.nameValidation(name);
+    Validator.nameValidation(surname);
+    Validator.isWrongEmail(email);
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
     this._id = uuidv4();
     this._createdDate = new Date();
     this._modificationDate = new Date();
   }
-  //
-  getName(): string {
-    return this._name;
-  }
-  getSurname(): string {
-    return this._surname;
-  }
-  getEmail(): string {
-    return this._email;
-  }
-  getCreatedDate(): Date {
-    return this._createdDate;
-  }
-  getModificationDate(): Date {
-    return this._modificationDate;
-  }
-  getId(): string {
+
+  get id() {
     return this._id;
   }
 
+  get createdDate() {
+    return this._createdDate;
+  }
+
+  get modificationDate() {
+    return this._modificationDate;
+  }
+
   setProperty(propertyToChange: propertyToChange, newValue: string): void {
-    if (propertyToChange === "_email") {
+    if (propertyToChange === "name" || propertyToChange === "surname") {
+      Validator.nameValidation(newValue);
+    } else {
       Validator.isWrongEmail(newValue);
     }
     this[propertyToChange] = newValue;
   }
-
-  updateModificationDate(): void {
-    this._modificationDate = new Date();
-  }
 }
-
-export default Contact;

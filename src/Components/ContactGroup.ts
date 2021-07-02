@@ -4,6 +4,11 @@ import Contact from "./Contact";
 import { v4 as uuidv4 } from "uuid";
 import Validator from "./Validator";
 
+type result = {
+  status:boolean
+  message:string
+}
+
 class ContactGroup implements ContactGroupInterface {
   private _id: string;
   contactGroupList: Contact[]; // typ zarowno tablica kontaktow jak i pusta tablica //
@@ -21,13 +26,26 @@ class ContactGroup implements ContactGroupInterface {
   }
 
 
-  addContactToGroup(newContact: Contact): void {
+  addContactToGroup(newContact: Contact): result | never {
     if (Validator.checkThatExist(newContact,this.contactGroupList)) {
       throw new Error("you duplicate contact");
     }
+
+    // co sie dzieje jeśli jest duplikat
+
     this.contactGroupList.push(newContact);
+
+
+    return {
+      status:true,
+      message:'Contact was added'
+    }
   }
-  deleteContact(contactToDelete: Contact) {
+  deleteContact(contactToDelete: Contact): Contact[] {
+    // co sie dzieje jeśli jest duplikat
+
+    // .findIndex + .splice
+
     const result = this.contactGroupList.filter(
       (contact) => contact.getId() !== contactToDelete.getId()
     );

@@ -55,9 +55,11 @@ class AdressBook implements AdressBookInterface {
     if (phrase.length < 2) throw new Error("Contact name is to short");
     const match = this.allContactsList.filter(
       (contact) =>
-        contact.getName() === phrase ||
-        contact.getSurname() === phrase ||
-        contact.getEmail() === phrase
+        // contact.getName() === phrase ||
+        // contact.getSurname() === phrase ||
+        // contact.getEmail() === phrase
+
+        contact.containsPhrase(phrase)
     );
     return match;
   }
