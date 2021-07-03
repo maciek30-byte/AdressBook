@@ -44,3 +44,4 @@ class Contact implements IContact {
     this[propertyToChange] = newValue;
   }
 }
+export default Contact

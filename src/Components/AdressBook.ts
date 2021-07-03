@@ -6,7 +6,7 @@ import { propertyToChange } from "../Types/AllTypes";
 
 //@ToDo type search Contact by phrase//
 
-class AdressBook implements AdressBookInterface {
+class AdressBook {
   allContactsList: Contact[];
   allGroupOfContactsList: ContactGroup[];
 
@@ -15,9 +15,9 @@ class AdressBook implements AdressBookInterface {
     this.allGroupOfContactsList = [];
   }
 
-  addContacts(...newContacts: Contact[]): void {
+  addContacts(...newContacts: Contact[]): void | never {
     if (newContacts.length === 0)
-      throw new Error("you have to add some contact");
+      throw new Error("you have to add anything to  contact");
     newContacts.forEach((contact) => {
       if (Validator.checkThatExist(contact, this.allContactsList)) {
         throw new Error("you can not duplicate contact");
@@ -27,63 +27,74 @@ class AdressBook implements AdressBookInterface {
     });
   }
 
-  deleteContacts(...contactsToDelete: Contact[]) {
+  deleteContacts(...contactsToDelete: Contact[]): void | never {
     if (contactsToDelete.length === 0) throw new Error("List is empty");
     contactsToDelete.forEach((contact) => {
-      this.allContactsList = this.allContactsList.filter(
-        (contactF) => contact.getId() !== contactF.getId()
+      const deletedContact: Contact | undefined = this.allContactsList.find(
+        (contactF) => contact.id !== contactF.id
       );
+      if (deletedContact === undefined)
+        throw new Error("We can not find Contact");
+      this.allContactsList.filter(
+        (contact) => contact.id !== deletedContact.id
+      );
+      this.deleteSingleContactFromGroup(deletedContact);
+    });
+  }
+
+  private deleteSingleContactFromGroup(contactToDelete: Contact) {
+    this.allGroupOfContactsList.filter((group) =>
+      group.deleteContact(contactToDelete)
+    );
+  }
+
+
+
+  searchContact(phrase: string): Contact[] | never {
+    if (phrase.length < 3) throw new Error(" write minimum 3 char");
+    return this.allContactsList.filter((contact) => {
+      return Object.values(contact)
+        .join("")
+        .toLowerCase()
+        .match(new RegExp(phrase.toLowerCase(), "g"));
     });
   }
 
   modifyContact(
-    contactToChange: Contact,
-    valueToModify: propertyToChange,
+    contactToModify: Contact,
+    propertyToChange: propertyToChange,
     newValue: string
-  ) {
-    this.allContactsList.find((contact) => {
-      if (contact.getId() === contactToChange.getId()) {
-        contact.setProperty(valueToModify, newValue);
-      } else {
-        throw new Error("Contact is not existing in our list");
-      }
-    });
-  }
-
-  //@ToDo TYPE!!!!!!!!!!!!
-  searchContact(phrase: string): Contact | void | any {
-    if (phrase.length < 2) throw new Error("Contact name is to short");
-    const match = this.allContactsList.filter(
-      (contact) =>
-        // contact.getName() === phrase ||
-        // contact.getSurname() === phrase ||
-        // contact.getEmail() === phrase
-
-        contact.containsPhrase(phrase)
+  ): void | never {
+    const modified: Contact | undefined = this.allContactsList.find(
+      (contact) => contact.id === contactToModify.id
     );
-    return match;
+    if (modified === undefined) throw new Error("Contact not found");
+    modified.setProperty(propertyToChange, newValue);
   }
 
   addContactsGroups(...newContactGroups: ContactGroup[]) {
     if (newContactGroups.length === 0) throw new Error("empty");
-    // validate that group is allredy exist //
     newContactGroups.forEach((group) => {
+      if (Validator.checkThatGroupExist(group, this.allGroupOfContactsList))
+        throw new Error("Group is existing allredy");
       this.allGroupOfContactsList.push(group);
     });
   }
 
   deleteContactsGroups(...groupsToDelete: ContactGroup[]): void {
     if (groupsToDelete.length === 0) throw new Error("List is empty");
-    groupsToDelete.forEach((contact) => {
+    groupsToDelete.forEach((group) => {
+      if (!Validator.checkThatGroupExist(group, this.allGroupOfContactsList))
+        throw new Error("Contact is not exist in a list");
       this.allGroupOfContactsList = this.allGroupOfContactsList.filter(
-        (contactF) => contact.getId() !== contactF.getId()
+        (groupF) => groupF.id !== group.id
       );
     });
   }
 
   updateGroupName(chossenGroup: ContactGroup, newValue: string): void {
     const element = this.allGroupOfContactsList.findIndex(
-      (groupInedex) => groupInedex.getId() === chossenGroup.getId()
+      (groupInedex) => groupInedex.id === chossenGroup.id
     );
     if (element === -1) throw new Error("group contact is not exist");
     this.allGroupOfContactsList[element].setGroupName(newValue);

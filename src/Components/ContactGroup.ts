@@ -3,54 +3,55 @@ import ContactGroupInterface from "../interfaces/GroupInterface";
 import Contact from "./Contact";
 import { v4 as uuidv4 } from "uuid";
 import Validator from "./Validator";
+import { throws } from "assert";
 
-type result = {
-  status:boolean
-  message:string
-}
+// type result = {
+//   status: boolean;
+//   message: string;
+// };
 
 class ContactGroup implements ContactGroupInterface {
   private _id: string;
-  contactGroupList: Contact[]; // typ zarowno tablica kontaktow jak i pusta tablica //
+  groupName: string;
+  contactGroupList: Contact[];
 
-  constructor(public groupName: string) {
+  constructor(groupName: string) {
+    Validator.nameValidation(groupName);
+    this.groupName = groupName;
     this._id = uuidv4();
     this.contactGroupList = [];
   }
-  getId(): string {
+  get id() {
     return this._id;
   }
-  setGroupName(newGroupName: string) {
-    Validator.isEmptyStringValue(newGroupName)
+  setGroupName(newGroupName: string):void {
+    Validator.nameValidation(newGroupName);
     this.groupName = newGroupName;
   }
 
-
-  addContactToGroup(newContact: Contact): result | never {
-    if (Validator.checkThatExist(newContact,this.contactGroupList)) {
+  addContactToGroup(newContact: Contact): void | never {
+    if (Validator.checkThatExist(newContact, this.contactGroupList)) {
       throw new Error("you duplicate contact");
     }
-
-    // co sie dzieje jeśli jest duplikat
-
     this.contactGroupList.push(newContact);
 
-
-    return {
-      status:true,
-      message:'Contact was added'
+    // return {
+    //   status: true,
+    //   message: "Contact was added",
+    // };
+  }
+  deleteContact(contactToDelete: Contact): Contact[] | never {
+    Validator.checkThatExist(contactToDelete, this.contactGroupList);
+    const result: number = this.contactGroupList.findIndex(
+      (contact) => contact.id === contactToDelete.id
+    );
+    if (result === -1) {
+      throw new Error("Contact is not exist in list");
+    } else {
+      return (this.contactGroupList = this.contactGroupList.splice(result, 1));
     }
   }
-  deleteContact(contactToDelete: Contact): Contact[] {
-    // co sie dzieje jeśli jest duplikat
 
-    // .findIndex + .splice
-
-    const result = this.contactGroupList.filter(
-      (contact) => contact.getId() !== contactToDelete.getId()
-    );
-    return result;
-  }
 }
 
-export default ContactGroup
+export default ContactGroup;
