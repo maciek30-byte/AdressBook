@@ -35,6 +35,16 @@ class Contact implements IContact {
     return this._modificationDate;
   }
 
+
+  isIncludesPhrase(phrase: string): boolean {
+    Validator.isEmptyStringValue(phrase);
+    const arrayFromContact = Object.values(this);
+    const condition = new RegExp(phrase.toLowerCase(), "g");
+    return arrayFromContact.some((searchedValue) =>
+      condition.test(searchedValue)
+    );
+  }
+
   setProperty(propertyToChange: propertyToChange, newValue: string): void {
     if (propertyToChange === "name" || propertyToChange === "surname") {
       Validator.nameValidation(newValue);
@@ -42,6 +52,7 @@ class Contact implements IContact {
       Validator.isWrongEmail(newValue);
     }
     this[propertyToChange] = newValue;
+    this._modificationDate = new Date()
   }
 }
-export default Contact
+export default Contact;

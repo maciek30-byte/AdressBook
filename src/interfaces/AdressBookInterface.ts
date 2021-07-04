@@ -6,7 +6,7 @@ interface AdressBookInterface {
   allContactsList: Contact[];
   allGroupOfContactsList: ContactGroup[];
 
-  searchContact(phrase: string): Contact | void | any; // szuka tylko w all Contacts ?
+  searchByPhrase(phrase: string): Contact | void | any;
   addContacts(...newContacts: Contact[]): void;
   deleteContacts(...contactsToDelete: Contact[]): void;
   modifyContact(
@@ -17,7 +17,6 @@ interface AdressBookInterface {
 
   addContactsGroups(...newContactGroups: ContactGroup[]): void;
   deleteContactsGroups(...groupsToDelete: []): void;
-
 }
 
 export default AdressBookInterface;

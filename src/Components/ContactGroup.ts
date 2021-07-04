@@ -24,7 +24,7 @@ class ContactGroup implements ContactGroupInterface {
   get id() {
     return this._id;
   }
-  setGroupName(newGroupName: string):void {
+  setGroupName(newGroupName: string): void {
     Validator.nameValidation(newGroupName);
     this.groupName = newGroupName;
   }
@@ -34,11 +34,6 @@ class ContactGroup implements ContactGroupInterface {
       throw new Error("you duplicate contact");
     }
     this.contactGroupList.push(newContact);
-
-    // return {
-    //   status: true,
-    //   message: "Contact was added",
-    // };
   }
   deleteContact(contactToDelete: Contact): Contact[] | never {
     Validator.checkThatExist(contactToDelete, this.contactGroupList);
@@ -51,7 +46,6 @@ class ContactGroup implements ContactGroupInterface {
       return (this.contactGroupList = this.contactGroupList.splice(result, 1));
     }
   }
-
 }
 
 export default ContactGroup;

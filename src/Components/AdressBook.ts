@@ -6,7 +6,7 @@ import { propertyToChange } from "../Types/AllTypes";
 
 //@ToDo type search Contact by phrase//
 
-class AdressBook {
+class AdressBook implements AdressBookInterface {
   allContactsList: Contact[];
   allGroupOfContactsList: ContactGroup[];
 
@@ -48,16 +48,11 @@ class AdressBook {
     );
   }
 
-
-
-  searchContact(phrase: string): Contact[] | never {
-    if (phrase.length < 3) throw new Error(" write minimum 3 char");
-    return this.allContactsList.filter((contact) => {
-      return Object.values(contact)
-        .join("")
-        .toLowerCase()
-        .match(new RegExp(phrase.toLowerCase(), "g"));
-    });
+  searchByPhrase(phrase: string): Contact[] {
+    Validator.isEmptyStringValue(phrase);
+    return this.allContactsList.filter((contact) =>
+      contact.isIncludesPhrase(phrase)
+    );
   }
 
   modifyContact(
@@ -100,3 +95,5 @@ class AdressBook {
     this.allGroupOfContactsList[element].setGroupName(newValue);
   }
 }
+
+export default AdressBook
